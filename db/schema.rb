@@ -11,11 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140410030741) do
+ActiveRecord::Schema.define(version: 20140410041243) do
 
   create_table "field_mappings", force: true do |t|
+    t.integer  "rule_set_id"
     t.string   "src_field_name"
     t.string   "out_field_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "field_mappings", ["rule_set_id"], name: "index_field_mappings_on_rule_set_id"
+
+  create_table "rule_sets", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -23,7 +23,7 @@ describe FieldMappingsController do
   # This should return the minimal set of attributes required to create a valid
   # FieldMapping. As you add validations to FieldMapping, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { { "src_field_name" => "MyString" } }
+  let(:valid_attributes) { { "rule_set" => "" } }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -85,14 +85,14 @@ describe FieldMappingsController do
       it "assigns a newly created but unsaved field_mapping as @field_mapping" do
         # Trigger the behavior that occurs when invalid params are submitted
         FieldMapping.any_instance.stub(:save).and_return(false)
-        post :create, {:field_mapping => { "src_field_name" => "invalid value" }}, valid_session
+        post :create, {:field_mapping => { "rule_set" => "invalid value" }}, valid_session
         assigns(:field_mapping).should be_a_new(FieldMapping)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         FieldMapping.any_instance.stub(:save).and_return(false)
-        post :create, {:field_mapping => { "src_field_name" => "invalid value" }}, valid_session
+        post :create, {:field_mapping => { "rule_set" => "invalid value" }}, valid_session
         response.should render_template("new")
       end
     end
@@ -106,8 +106,8 @@ describe FieldMappingsController do
         # specifies that the FieldMapping created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        FieldMapping.any_instance.should_receive(:update).with({ "src_field_name" => "MyString" })
-        put :update, {:id => field_mapping.to_param, :field_mapping => { "src_field_name" => "MyString" }}, valid_session
+        FieldMapping.any_instance.should_receive(:update).with({ "rule_set" => "" })
+        put :update, {:id => field_mapping.to_param, :field_mapping => { "rule_set" => "" }}, valid_session
       end
 
       it "assigns the requested field_mapping as @field_mapping" do
@@ -128,7 +128,7 @@ describe FieldMappingsController do
         field_mapping = FieldMapping.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         FieldMapping.any_instance.stub(:save).and_return(false)
-        put :update, {:id => field_mapping.to_param, :field_mapping => { "src_field_name" => "invalid value" }}, valid_session
+        put :update, {:id => field_mapping.to_param, :field_mapping => { "rule_set" => "invalid value" }}, valid_session
         assigns(:field_mapping).should eq(field_mapping)
       end
 
@@ -136,7 +136,7 @@ describe FieldMappingsController do
         field_mapping = FieldMapping.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         FieldMapping.any_instance.stub(:save).and_return(false)
-        put :update, {:id => field_mapping.to_param, :field_mapping => { "src_field_name" => "invalid value" }}, valid_session
+        put :update, {:id => field_mapping.to_param, :field_mapping => { "rule_set" => "invalid value" }}, valid_session
         response.should render_template("edit")
       end
     end

@@ -1,4 +1,6 @@
 CsvProcessor::Application.routes.draw do
+  resources :rule_sets
+
   resources :field_mappings
 
   # The priority is based upon order of creation: first created -> highest priority.

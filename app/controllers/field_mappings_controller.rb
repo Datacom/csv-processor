@@ -69,6 +69,6 @@ class FieldMappingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def field_mapping_params
-      params.require(:field_mapping).permit(:src_field_name, :out_field_name)
+      params.require(:field_mapping).permit(:rule_set_id, :src_field_name, :out_field_name)
     end
 end
