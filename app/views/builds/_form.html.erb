@@ -1,0 +1,11 @@
+<%= form_for @build do |f| %>
+  <%= f.fields_for :files do |g| %>
+    <%= g.label :file %>
+    <%= g.file_field :file %>
+
+    <%= g.label :rule_set_id %>
+    <%= g.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name), prompt: true %>
+  <% end %>
+
+  <%= f.submit 'Build CSV' %>
+<% end %>
