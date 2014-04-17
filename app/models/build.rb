@@ -1,17 +1,5 @@
-class Build
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
-  extend ActiveModel::Naming
+class Build < ActiveRecord::Base
+  has_many :build_files
 
-  attr_accessor :files
-
-  def initialize(attributes = {})
-    attributes.each do |name, value|
-      send "#{name}=", value
-    end
-  end
-
-  def persisted?
-    false
-  end
+  accepts_nested_attributes_for :build_files
 end

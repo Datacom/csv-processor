@@ -11,7 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140410041243) do
+ActiveRecord::Schema.define(version: 20140416232912) do
+
+  create_table "build_files", force: true do |t|
+    t.integer  "build_id"
+    t.integer  "rule_set_id"
+    t.string   "path"
+    t.integer  "size"
+    t.string   "md5"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "build_files", ["build_id"], name: "index_build_files_on_build_id"
+  add_index "build_files", ["rule_set_id"], name: "index_build_files_on_rule_set_id"
+
+  create_table "builds", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "field_mappings", force: true do |t|
     t.integer  "rule_set_id"

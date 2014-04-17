@@ -1,11 +1,11 @@
 <%= form_for @build do |f| %>
-  <%= f.fields_for :files do |g| %>
-    <%= g.label :file %>
-    <%= g.file_field :file %>
-
-    <%= g.label :rule_set_id %>
-    <%= g.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name), prompt: true %>
+  <%= f.fields_for :build_files do |g| %>
+    <%= render 'build_file_fields', g: g %>
   <% end %>
 
-  <%= f.submit 'Build CSV' %>
+  <div class="row">
+    <div class="button-group col-sm-12">
+      <%= f.submit 'Build CSV', class: 'btn btn-default' %>
+    </div>
+  </div>
 <% end %>

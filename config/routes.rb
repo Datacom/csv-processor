@@ -3,7 +3,8 @@ CsvProcessor::Application.routes.draw do
 
   resources :field_mappings
 
-  resources :builds
+  resources :builds, except: :index
+  get 'builds', to: 'builds#new'
 
   # You can have the root of your site routed with "root"
   root 'dashboard#index'
