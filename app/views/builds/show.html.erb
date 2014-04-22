@@ -3,7 +3,9 @@
 <div class="row">
   <div class="col-xs-12">
     <% @build.build_files.map do |file| %>
-      <%= array_to_table(file.to_a) %>
+      <% cache file do %>
+        <%= display(file) %>
+      <% end %>
     <% end %>
   </div>
 </div>
