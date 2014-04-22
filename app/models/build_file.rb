@@ -4,28 +4,49 @@ class BuildFile < ActiveRecord::Base
   belongs_to :build
   belongs_to :rule_set
 
-  attr_accessor :raw
+  before_save :save_raw_file
+
+  REPO = File.join("tmp", "files")
+
+  # Only load the contents when required. Set @raw to nil to reload.
+  def raw
+    @raw ||= File.read(path)
+  end
 
   def file=(upload)
     case upload
     when ActionDispatch::Http::UploadedFile
-      self.raw  = upload.read.encode
-      self.path = "tmp/files/#{upload.original_filename}"
+      self.path = File.join(REPO, upload.original_filename)
+      @raw      = upload.read.encode
     when File
-      self.raw  = upload.read.encode
-      self.path = "tmp/files/#{File.split(upload.path)[1]}"
+      self.path = File.join(REPO, File.split(upload.path)[1])
+      @raw      = upload.read.encode
     when String
-      self.raw  = File.read(upload).encode
-      self.path = "tmp/files/#{File.split(upload)[1]}"
+      self.path = File.join(REPO, File.split(upload)[1])
+      @raw      = File.read(upload).encode
     end
-
-    Dir.mkpath File.split(path)[0]
-    self.size = File.write(path, raw)
-    self.md5 = Digest::MD5.file(path).hexdigest
   end
 
   def to_a
-    CSV.parse(raw)
+    raw ? CSV.parse(raw) : [[]]
+  end
+
+  def translate!
+    input  = to_a
+    output = [input[0].map { |h| rule_set.to_hash[h] || h }] + input[1..-1]
+    @raw   = output.map(&:to_csv).join
+  end
+
+  def raw_changed?
+    Digest::MD5.hexdigest(raw) != md5
+  end
+
+  private
+
+  def save_raw_file
+    Dir.mkpath REPO
+    self.size = File.write(path, raw)
+    self.md5 = Digest::MD5.file(path).hexdigest
   end
 end
 
