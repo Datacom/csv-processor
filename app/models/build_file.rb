@@ -8,11 +8,6 @@ class BuildFile < ActiveRecord::Base
 
   REPO = File.join("tmp", "files")
 
-  # Only load the contents when required. Set @raw to nil to reload.
-  def raw
-    @raw ||= File.read(path)
-  end
-
   def file=(upload)
     case upload
     when ActionDispatch::Http::UploadedFile
@@ -27,21 +22,42 @@ class BuildFile < ActiveRecord::Base
     end
   end
 
-  def to_a
-    raw ? CSV.parse(raw) : [[]]
+  def table
+    @table ||= CSV::Table.new(parsed_csv[1..-1].map { |r| CSV::Row.new(parsed_csv[0], r) })
+  end
+
+  delegate :headers, to: :table
+
+  def remove_blanks!
+    orig   = table.mode
+    @table = table.by_col.delete_if { |c| c.flatten.all?(&:nil?) }
+    @table = table.by_row.delete_if &:empty?
+    @table = table.send("by_#{orig}")
+    @raw   = @table.to_s
+    @table
   end
 
   def translate!
-    input  = to_a
-    output = [input[0].map { |h| rule_set.to_hash[h] || h }] + input[1..-1]
-    @raw   = output.map(&:to_csv).join
+    @table = CSV::Table.new(parsed_csv[1..-1].map do |r|
+      CSV::Row.new(headers.map { |h| rule_set.to_hash[h] })
+    end)
+    @raw = @table.to_s
+  end
+
+  private
+
+  # Only load the contents when required. Set @raw to nil to reload.
+  def raw
+    @raw ||= File.read(path)
+  end
+
+  def parsed_csv
+    @parsed_csv ||= (raw ? CSV.parse(raw) : [[]])
   end
 
   def raw_changed?
     Digest::MD5.hexdigest(raw) != md5
   end
-
-  private
 
   def save_raw_file
     Dir.mkpath REPO
