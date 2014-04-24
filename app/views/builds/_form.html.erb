@@ -1,0 +1,54 @@
+<%= form_for @build do |f| %>
+  <div class="row">
+    <div class="col-sm-12">
+      <%= f.text_field :name, class: 'form-control', placeholder: 'Enter build name' %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-5">
+      <span class="label label-default">File</span>
+    </div>
+    <div class="col-sm-4">
+      <span class="label label-default">Rule Set</span>
+    </div>
+  </div>
+
+  <%= f.fields_for :build_files do |g| %>
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <%= g.index + 1 %>
+          </span>
+          <%= g.file_field :file, class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <%= g.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name), {prompt: true}, class: 'form-control' %>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="btn-group pull-right">
+          <%= link_to_function icon(:arrow_up),   'ToDo_moveUpBuildFile()',   class: 'btn btn-default', title: 'Move up' %>
+          <%= link_to_function icon(:arrow_down), 'ToDo_moveDownBuildFile()', class: 'btn btn-default', title: 'Move down' %>
+          <%= link_to_function icon(:trash_o),    'ToDo_removeBuildFile()',   class: 'btn btn-default', title: 'Delete' %>
+        </div>
+      </div>
+    </div>
+    <div class="row">&nbsp;</div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-xs-4">
+      <%= link_to_function "#{icon :upload} Add file".html_safe, 'addBuildFile()', class: 'btn btn-default' %>
+    </div>
+
+    <div class="col-xs-8">
+      <div class="btn-group pull-right">
+        <%= link_to_function "#{icon :search} Preview".html_safe, '', class: 'btn btn-default' %>
+        <%= f.submit "Save", class: 'btn btn-primary' %>
+      </div>
+    </div>
+  </div>
+<% end %>
