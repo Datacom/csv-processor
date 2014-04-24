@@ -1,10 +1,4 @@
 CsvProcessor::Application.routes.draw do
-  resources :rule_sets
-
-  resources :field_mappings
-
-  resources :builds
-
   # You can have the root of your site routed with "root"
   root 'dashboard#index'
 
