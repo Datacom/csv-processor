@@ -1,4 +1,8 @@
 CsvProcessor::Application.routes.draw do
+  resources :builds, except: :edit do
+    get :download, to: 'builds#download'
+  end
+
   # You can have the root of your site routed with "root"
   root 'dashboard#index'
 

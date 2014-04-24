@@ -22,6 +22,10 @@ class BuildFile < ActiveRecord::Base
     end
   end
 
+  def filename
+    File.split(path)[1]
+  end
+
   def table
     @table ||= CSV::Table.new(parsed_csv[1..-1].map { |r| CSV::Row.new(parsed_csv[0], r) })
   end
@@ -34,14 +38,15 @@ class BuildFile < ActiveRecord::Base
     @table = table.by_row.delete_if &:empty?
     @table = table.send("by_#{orig}")
     @raw   = @table.to_s
-    @table
+    self
   end
 
   def translate!
     @table = CSV::Table.new(parsed_csv[1..-1].map do |r|
-      CSV::Row.new(headers.map { |h| rule_set.to_hash[h] })
+      CSV::Row.new(headers.map { |h| rule_set.to_hash[h] }, r)
     end)
     @raw = @table.to_s
+    self
   end
 
   private

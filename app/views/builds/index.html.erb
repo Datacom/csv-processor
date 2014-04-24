@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-xs-6"><h1>Builds</h1></div>
+  <div class="col-xs-6">
+    <%= link_to "#{icon(:plus)} New".html_safe, new_build_path, class: 'btn btn-default' %> <!-- ToDo: needs aligning -->
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th style="max-width: 18px"></th>
+          <th>Name</th>
+          <th>Build date</th>
+          <th>Rows</th>
+          <th>Columns</th>
+          <th>Files</th>
+          <th style="max-width: 43px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @builds.each do |build| %>
+          <tr>
+            <td style="max-width: 18px">
+              <%= link_to icon(:search), 'ToDo', class: 'btn btn-default', title: 'Expand' %>
+            </td>
+            <td><%= link_to_name build %></td>
+            <td><%= build.updated_at.getlocal %></td>
+            <td><%= build.table.count %></td>
+            <td><%= build.table.headers.count %></td>
+            <td><%= build.build_files.count %></td>
+            <td style="max-width: 43px">
+              <%= link_to icon(:download), build_download_path(build), class: 'btn btn-default', title: 'Download' %>
+              <%= link_to icon(:pencil),   build, class: 'btn btn-default', title: 'Edit'     %>
+              <%= link_to icon(:trash_o),  build, method: :delete, confirm: 'Are you sure you want to delete this build?',
+                    class: 'btn btn-default', title: 'Delete'   %>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="9">
+              <%= csv_to_html(build.table) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

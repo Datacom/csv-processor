@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20140416232912) do
   add_index "build_files", ["rule_set_id"], name: "index_build_files_on_rule_set_id"
 
   create_table "builds", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
