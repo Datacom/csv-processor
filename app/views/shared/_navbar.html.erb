@@ -14,7 +14,10 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <% {'Rule Sets' => rule_sets_path, 'Field Mappings' => field_mappings_path}.each do |text, path| %>
+        <% tabs = {'Builds'         => builds_path,
+                   'Rule Sets'      => rule_sets_path,
+                   'Field Mappings' => field_mappings_path} %>
+        <% tabs.each do |text, path| %>
           <li<%= ' class=active' if request.path =~ /#{path}/ %>>
             <%= link_to text, path %>
           </li>

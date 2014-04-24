@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="input_group col-sm-6">
+    <span class="label label-default"><%= g.label :file %></span>
+    <%= g.file_field :file, class: 'form-control' %>
+  </div>
+
+  <div class="input_group col-sm-6">
+    <span class="label label-default"><%= g.label :rule_set_id %></span>
+    <%= g.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name), {prompt: true}, class: 'form-control' %>
+  </div>
+</div>

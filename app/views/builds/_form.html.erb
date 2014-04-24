@@ -1,0 +1,11 @@
+<%= form_for @build do |f| %>
+  <%= f.fields_for :build_files do |g| %>
+    <%= render 'build_file_fields', g: g %>
+  <% end %>
+
+  <div class="row">
+    <div class="button-group col-sm-12">
+      <%= f.submit 'Build CSV', class: 'btn btn-default' %>
+    </div>
+  </div>
+<% end %>
