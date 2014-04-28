@@ -1,7 +1,9 @@
 module ApplicationHelper
   def csv_to_html(csv_table, options={})
-    # Default options
-    options.reverse_merge!(class: 'table table-bordered')
+    # Default options: {class: 'table table-bordered'}. Use :add_class to add extra classes without removing these
+    classes = options[:class].try(:split, ' ') || %w(table table-bordered)
+    classes += options[:add_class].split(' ') if options[:add_class]
+    options.reverse_merge!(class: classes.join(' '))
 
     content_tag(:table, options) do
       [

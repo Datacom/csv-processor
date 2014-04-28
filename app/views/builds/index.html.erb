@@ -1,7 +1,11 @@
 <div class="row">
   <div class="col-xs-6"><h1>Builds</h1></div>
   <div class="col-xs-6">
-    <%= link_to "#{icon(:plus)} New".html_safe, new_build_path, class: 'btn btn-default' %> <!-- ToDo: needs aligning -->
+    <h1>&nbsp;<%# For alignment %>
+      <div class="btn-group pull-right">
+        <%= link_to "#{icon(:plus)} New".html_safe, new_build_path, class: 'btn btn-default' %>
+      </div>
+    </h1>
   </div>
 </div>
 <div class="row">
@@ -9,13 +13,12 @@
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
-          <th style="max-width: 18px"></th>
           <th>Name</th>
           <th>Build date</th>
           <th>Rows</th>
           <th>Columns</th>
           <th>Files</th>
-          <th style="max-width: 43px"></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
