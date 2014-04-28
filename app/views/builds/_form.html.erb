@@ -1,3 +1,12 @@
+<% cols = case @build.build_files.count
+          when 0, 1 then [6, 5, 1]
+          when 2    then [5, 5, 2]
+          else           [5, 4, 3]
+          end %>
+
+<%= link_to "#{icon :arrow_left} Back to Builds".html_safe, builds_path %>
+<div class="row">&nbsp;</div>
+
 <%= form_for @build do |f| %>
   <div class="row">
     <div class="col-sm-12">
@@ -5,34 +14,42 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-5">
-      <span class="label label-default">File</span>
-    </div>
-    <div class="col-sm-4">
-      <span class="label label-default">Rule Set</span>
-    </div>
+    <% if @build.build_files.any? %>
+      <div class="col-sm-<%= cols[0] -%>">
+        <span class="label label-default">File</span>
+      </div>
+      <div class="col-sm-<%= cols[1] -%>">
+        <span class="label label-default">Rule Set</span>
+      </div>
+    <% else %>
+      &nbsp;
+    <% end %>
   </div>
 
   <%= f.fields_for :build_files do |g| %>
     <div class="row">
-      <div class="col-sm-5">
-        <div class="input-group">
-          <span class="input-group-addon">
-            <%= g.index + 1 %>
-          </span>
-          <%= g.file_field :file, class: 'form-control' %>
-        </div>
+      <div class="col-sm-<%= cols[0] -%>">
+        <%= g.file_field :file, class: 'form-control' %>
       </div>
 
-      <div class="col-sm-4">
-        <%= g.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name), {prompt: true}, class: 'form-control' %>
+      <div class="col-sm-<%= cols[1] -%>">
+        <%= g.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name, selected: g.object.rule_set_id),
+                     {prompt: true}, class: 'form-control' %>
       </div>
 
-      <div class="col-sm-3">
+      <div class="col-sm-<%= cols[2] -%>">
         <div class="btn-group pull-right">
-          <%= link_to_function icon(:arrow_up),   'ToDo_moveUpBuildFile()',   class: 'btn btn-default', title: 'Move up' %>
-          <%= link_to_function icon(:arrow_down), 'ToDo_moveDownBuildFile()', class: 'btn btn-default', title: 'Move down' %>
-          <%= link_to_function icon(:trash_o),    'ToDo_removeBuildFile()',   class: 'btn btn-default', title: 'Delete' %>
+          <%= g.hidden_field :order %>
+
+          <% if g.index > 0 %>
+            <%= link_to_function icon(:arrow_up), "moveUpBuildFile(#{g.index})", class: 'btn btn-default', title: 'Move up' %>
+          <% end %>
+
+          <% if g.index < @build.build_files.count - 1 %>
+            <%= link_to_function icon(:arrow_down), "moveDownBuildFile(#{g.index})", class: 'btn btn-default', title: 'Move down' %>
+          <% end %>
+
+          <%= link_to_function icon(:trash_o), "removeBuildFile(#{g.index})", class: 'btn btn-default', title: 'Delete' %>
         </div>
       </div>
     </div>
@@ -41,7 +58,7 @@
 
   <div class="row">
     <div class="col-xs-4">
-      <%= link_to_function "#{icon :upload} Add file".html_safe, 'addBuildFile()', class: 'btn btn-default' %>
+      <%= link_to "#{icon :upload} Add file".html_safe, build_add_file_path(@build), class: 'btn btn-default' %>
     </div>
 
     <div class="col-xs-8">

@@ -8,6 +8,8 @@ class BuildFile < ActiveRecord::Base
 
   REPO = File.join("tmp", "files")
 
+  validates :order, presence: true, uniqueness: {scope: :build_id}
+
   def file=(upload)
     case upload
     when ActionDispatch::Http::UploadedFile
@@ -49,6 +51,10 @@ class BuildFile < ActiveRecord::Base
     self
   end
 
+  def set_order!
+    self.order = ((build.build_files - [self]).map(&:order).max || 0) + 1
+  end
+
   private
 
   # Only load the contents when required. Set @raw to nil to reload.
@@ -65,6 +71,10 @@ class BuildFile < ActiveRecord::Base
   end
 
   def save_raw_file
+    translate!
+    remove_blanks!
+    set_order!
+
     Dir.mkpath REPO
     self.size = File.write(path, raw)
     self.md5 = Digest::MD5.file(path).hexdigest
