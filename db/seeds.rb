@@ -31,3 +31,21 @@ print "FieldMappings: #{FieldMapping.count} before, "
   FieldMapping.where(rule_set: set, src_field_name: src).first_or_create(out_field_name: out)
 end
 puts "#{FieldMapping.count} now"
+
+print "Builds: #{Build.count} before, "
+build = Build.where(name: "Sample build").first_or_create
+puts "#{Build.count} now"
+
+print "BuildFiles: #{BuildFile.count} before, "
+[
+  ['A03_0539_0390145_000-02Apr14.csv', westpac, 1],
+  ['AXXXX_XXXX_XXXX_4579-02Apr14.csv', wpc_crd, 2],
+  ['TransHist.csv',                    bnz,     3],
+].each do |file, rule_set, pos|
+  build.build_files.create! do |bf|
+    bf.file     = "/home/patrick/Downloads/#{file}"
+    bf.rule_set = rule_set
+    bf.position = pos
+  end
+end
+puts "#{BuildFile.count} now"

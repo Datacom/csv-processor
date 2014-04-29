@@ -33,13 +33,25 @@ module ApplicationHelper
     link_to text, record, *args
   end
 
-  def icon(icon_name = nil, *extra_classes)
-    if icon_name.nil? # ToDo: this is a placeholder while I'm finding icons. delete it
+  # Returns a FontAwesome icon. FA classes can be added in plain arguments, removing the 'fa-' prefix.
+  # Non-FA classes and other HTML options can be added as a hash, just as they would be passed to #content_tag.
+  # Examples:
+  # icon(:square)                       => '<i class="fa fa-square"></i>'
+  # icon(:square, :stack_2x, :inverse)  => '<i class="fa fa-square fa-stack-2x fa-inverse"></i>'
+  # icon(:square, class: 'text-danger') => '<i class="fa fa-square text-danger"></i>'
+  def icon(*args)
+    options = args.extract_options!
+
+    if args.empty? # ToDo: icon() is a placeholder while I'm finding icons. delete it
       classes = ['fa', 'fa-info-circle', 'fa-lg', 'text-danger']
     else
-      classes = ['fa', "fa-#{icon_name.to_s.gsub('_', '-')}"] + extra_classes.map { |c| "fa-#{c.to_s.gsub('_', '-')}"}
+      classes = ['fa'] +
+        args.map { |c| "fa-#{c.to_s.gsub('_', '-')}"} +
+        (options.delete(:class).try(:split, ' ') || [])
     end
 
-    content_tag(:i, '', class: classes.join(' '))
+    options[:class] = classes.join(' ')
+
+    content_tag(:i, '', options)
   end
 end

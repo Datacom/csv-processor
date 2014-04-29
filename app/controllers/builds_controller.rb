@@ -5,6 +5,12 @@ class BuildsController < ApplicationController
     @builds = Build.all
   end
 
+  def new
+    @build = Build.new
+    @build.build_files.new
+    render :show
+  end
+
   def show
   end
 
@@ -12,14 +18,19 @@ class BuildsController < ApplicationController
     if @build.update(build_params)
       redirect_to @build, notice: 'Build was successfully updated.'
     else
-      render action: 'edit' 
+      render action: 'show' 
     end
+  end
+
+  def add_file
+    @build.build_files.new
+    render :show
   end
 
   private
 
   def find_build
-    @build = Build.find(params[:id])
+    @build = Build.find(params[:id] || params[:build_id])
   end
 
   def build_params

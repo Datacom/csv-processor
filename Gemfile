@@ -6,6 +6,9 @@ gem 'rails', '4.0.4'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 
+# Use squeel for queries
+gem 'squeel'
+
 # Use SCSS for stylesheets and Bootstrap styling
 gem 'sass-rails', '~> 4.0.2'
 gem 'bootstrap-sass', '~> 3.1.1'

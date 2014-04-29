@@ -1,7 +1,12 @@
 CsvProcessor::Application.routes.draw do
   resources :builds, except: :edit do
-    get :download, to: 'builds#download'
-    get :add_file, to: 'builds#add_file'
+    get :download
+    get :add_file
+  end
+
+  resources :build_files, only: [:destroy] do
+    get :move_up
+    get :move_down
   end
 
   # You can have the root of your site routed with "root"

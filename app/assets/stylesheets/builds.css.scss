@@ -1,0 +1,8 @@
+.col-fixed, .col-fluid {
+  float:      left;
+  position:   relative;
+  min-height: 1px;
+  padding:    0 15px;
+}
+.col-fixed { width: 143px; }
+.col-fluid { width: calc(100% - 143px); }

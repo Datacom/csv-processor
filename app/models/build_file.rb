@@ -8,7 +8,19 @@ class BuildFile < ActiveRecord::Base
 
   REPO = File.join("tmp", "files")
 
-  validates :order, presence: true, uniqueness: {scope: :build_id}
+  validates :position,    presence: true, uniqueness: {scope: :build_id}
+  validates :rule_set_id, presence: true
+
+  def prev
+    my_pos = position
+    self.class.where { position < my_pos }.to_a.max_by &:position
+  end
+
+  def foll
+    my_pos = position
+    self.class.where { position > my_pos }.to_a.min_by &:position
+  end
+
 
   def file=(upload)
     case upload
@@ -51,10 +63,6 @@ class BuildFile < ActiveRecord::Base
     self
   end
 
-  def set_order!
-    self.order = ((build.build_files - [self]).map(&:order).max || 0) + 1
-  end
-
   private
 
   # Only load the contents when required. Set @raw to nil to reload.
@@ -73,7 +81,6 @@ class BuildFile < ActiveRecord::Base
   def save_raw_file
     translate!
     remove_blanks!
-    set_order!
 
     Dir.mkpath REPO
     self.size = File.write(path, raw)
