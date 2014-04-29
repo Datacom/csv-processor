@@ -24,20 +24,16 @@
     <% end %>
   </div>
 
-  <%= f.fields_for :build_files do |g| %>
-    <%= render 'build_file_fields', g: g %>
+  <%= f.fields_for :build_files do |bf| %>
+    <%= render 'build_file_fields', f: bf %>
   <% end %>
 
-  <div class="row form-group">
-    <div class="col-xs-4">
-      <%= link_to "#{icon :upload} Add file".html_safe, build_add_file_path(@build), class: 'btn btn-default' %>
-    </div>
+  <div>
+    <%= link_to_add_association "#{icon :upload} Add file".html_safe, f, :build_files, class: 'btn btn-default' %>
 
-    <div class="col-xs-8">
-      <div class="btn-group pull-right">
-        <%= link_to_function "#{icon :search} Preview".html_safe, '', class: 'btn btn-default' %>
-        <%= f.submit "Save", class: 'btn btn-primary' %>
-      </div>
+    <div class="btn-group pull-right form-group">
+      <%= link_to_function "#{icon :search} Preview".html_safe, 'previewBuild(0)', class: 'btn btn-default' %>
+      <%= f.submit "Save", class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

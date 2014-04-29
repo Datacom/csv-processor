@@ -17,3 +17,6 @@
 //
 // Loads all Bootstrap javascripts
 //= require bootstrap
+//
+// Loads all Cocoon javascripts
+//= require cocoon

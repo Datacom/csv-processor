@@ -7,7 +7,6 @@ class BuildsController < ApplicationController
 
   def new
     @build = Build.new
-    @build.build_files.new
     render :show
   end
 
@@ -22,11 +21,6 @@ class BuildsController < ApplicationController
     end
   end
 
-  def add_file
-    @build.build_files.new
-    render :show
-  end
-
   private
 
   def find_build
@@ -34,6 +28,6 @@ class BuildsController < ApplicationController
   end
 
   def build_params
-    params.require(:build).permit(build_files_attributes: [:file, :rule_set_id])
+    params.require(:build).permit(build_files_attributes: [:file, :rule_set_id, :position, :_destroy])
   end
 end

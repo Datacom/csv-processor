@@ -16,7 +16,7 @@
 </tr>
 
 <%# Using jQuery toggle() methods affects the display attribute, so using that rather than the 'hidden' class %>
-<tr id="build-<%= build.id %>-preview" style="display: none">
+<tr id="cp-build-<%= build.id %>-preview" style="display: none">
   <td colspan="9">
     <%= csv_to_html(build.table, add_class: 'table-condensed') %>
   </td>

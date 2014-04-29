@@ -1,35 +1,25 @@
-<div id="build_file_<%= g.index -%>_fields">
-  <div class="row form-group">
-    <div class="col-fluid">
-      <div class="row">
-        <div class="col-sm-6">
-          <%= g.file_field :file, class: 'form-control' %>
-        </div>
+<div class="row form-group cp-build-file-fields">
+  <div class="col-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <%= f.file_field :file, class: 'form-control' %>
+      </div>
 
-        <div class="col-sm-6">
-          <%= g.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name, selected: g.object.rule_set_id),
-                       {prompt: true}, class: 'form-control' %>
-        </div>
+      <div class="col-sm-6">
+        <%= f.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name, selected: f.object.rule_set_id), {prompt: true}, class: 'form-control' %>
       </div>
     </div>
+  </div>
 
-    <div class="col-fixed">
-      <div class="row">
-        <div class="col-xs-12">
-          <%= g.hidden_field :position %>
+  <div class="col-fixed">
+    <div class="row">
+      <div class="col-xs-12">
+        <%= f.hidden_field :position %>
 
-          <div class="btn-group pull-right">
-            <% d = g.index > 0 %>
-            <%= link_to icon(d ? :arrow_up : :ban, style: 'width: 13px'), build_file_move_up_path(g.object), title: 'Move up',
-                  class: "btn btn-default#{' disabled' unless d}" %>
-
-            <% d = g.index < @build.build_files.count - 1 %>
-            <%= link_to icon(d ? :arrow_down : :ban, style: 'width: 13px'), build_file_move_down_path(g.object), title: 'Move down',
-                  class: "btn btn-default#{' disabled' unless d}" %>
-
-            <%= link_to icon(:trash_o), build_file_path(g.object), class: 'btn btn-default', title: 'Delete',
-                  method: :delete, confirm: 'Are you sure you want to remove this file from the build?' %>
-          </div>
+        <div class="btn-group pull-right">
+          <%= link_to icon(:arrow_up),   '#', title: 'Move up',   class: 'btn btn-default cp-move-up'   %>
+          <%= link_to icon(:arrow_down), '#', title: 'Move down', class: 'btn btn-default cp-move-down' %>
+          <%= link_to_remove_association icon(:trash_o), f, wrapper_class: 'cp-build-file-fields', class: 'btn btn-default', style: 'margin-left: -1px' %>
         </div>
       </div>
     </div>
