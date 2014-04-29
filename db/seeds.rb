@@ -38,12 +38,12 @@ puts "#{Build.count} now"
 
 print "BuildFiles: #{BuildFile.count} before, "
 [
-  ['A03_0539_0390145_000-02Apr14.csv', westpac, 1],
-  ['AXXXX_XXXX_XXXX_4579-02Apr14.csv', wpc_crd, 2],
-  ['TransHist.csv',                    bnz,     3],
+  ['A??_????_???????_???-???????', westpac, 1],
+  ['AXXXX_XXXX_XXXX_????-???????', wpc_crd, 2],
+  ['TransHist',                    bnz,     3],
 ].each do |file, rule_set, pos|
-  build.build_files.create! do |bf|
-    bf.file     = "/home/patrick/Downloads/#{file}"
+  build.build_files.create do |bf|
+    bf.file     = Dir.glob("#{ENV['HOME']}/Downloads/#{file}.csv").first or next
     bf.rule_set = rule_set
     bf.position = pos
   end
