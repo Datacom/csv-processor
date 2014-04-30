@@ -1,6 +1,7 @@
 CsvProcessor::Application.routes.draw do
   resources :builds, except: :edit do
     get :download
+    get :preview
   end
 
   # You can have the root of your site routed with "root"

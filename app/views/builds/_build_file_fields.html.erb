@@ -1,11 +1,15 @@
-<div class="row form-group cp-build-file-fields">
+<div class="row form-group cp-build-file-field-row">
   <div class="col-fluid">
     <div class="row">
-      <div class="col-sm-6">
-        <%= f.file_field :file, class: 'form-control' %>
+      <div class="col-xs-6">
+        <% if f.object.new_record? %>
+          <%= f.file_field :file, class: 'form-control' %>
+        <% else %>
+          <%= f.text_field :filename, class: 'form-control', disabled: true %>
+        <% end %>
       </div>
 
-      <div class="col-sm-6">
+      <div class="col-xs-6">
         <%= f.select :rule_set_id, options_from_collection_for_select(RuleSet.all, :id, :name, selected: f.object.rule_set_id), {prompt: true}, class: 'form-control' %>
       </div>
     </div>
@@ -19,7 +23,7 @@
         <div class="btn-group pull-right">
           <%= link_to icon(:arrow_up),   '#', title: 'Move up',   class: 'btn btn-default cp-move-up'   %>
           <%= link_to icon(:arrow_down), '#', title: 'Move down', class: 'btn btn-default cp-move-down' %>
-          <%= link_to_remove_association icon(:trash_o), f, wrapper_class: 'cp-build-file-fields', class: 'btn btn-default', style: 'margin-left: -1px' %>
+          <%= link_to_remove_association icon(:trash_o), f, wrapper_class: 'cp-build-file-field-row', class: 'btn btn-default', style: 'margin-left: -1px' %>
         </div>
       </div>
     </div>

@@ -13,6 +13,11 @@ class BuildsController < ApplicationController
   def show
   end
 
+  def preview
+    @build.attributes = build_params
+    render partial: 'preview', locals: {build: @build}
+  end
+
   def update
     if @build.update(build_params)
       redirect_to @build, notice: 'Build was successfully updated.'
@@ -28,6 +33,6 @@ class BuildsController < ApplicationController
   end
 
   def build_params
-    params.require(:build).permit(build_files_attributes: [:file, :rule_set_id, :position, :_destroy])
+    params.require(:build).permit(:name, build_files_attributes: [:id, :file, :rule_set_id, :position, :_destroy])
   end
 end

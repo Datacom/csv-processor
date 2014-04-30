@@ -1,2 +1,10 @@
 <%= render 'form' %>
-<%= render 'preview', build: @build %>
+
+<div class="row">
+  <div class="col-xs-12">
+    <span class="label label-default">Preview</span>
+    <div id="cp-build-preview">
+      <%= render 'preview', build: @build %>
+    </div>
+  </div>
+</div>
