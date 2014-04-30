@@ -13,6 +13,8 @@
 <body>
   <%= render partial: 'shared/navbar' %>
   <div id="content" class="container">
+    <%= flash_div(:notice) %>
+    <%= flash_div(:alert) %>
     <%= yield %>
   </div>
 </body>

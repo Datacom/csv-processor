@@ -22,7 +22,8 @@ class BuildsController < ApplicationController
     if @build.update(build_params)
       redirect_to @build, notice: 'Build was successfully updated.'
     else
-      render action: 'show' 
+      flash.now[:alert] = @build.errors.full_messages.to_sentence
+      render action: 'show'
     end
   end
 

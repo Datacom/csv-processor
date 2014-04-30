@@ -8,8 +8,7 @@ class BuildFile < ActiveRecord::Base
 
   REPO = File.join("tmp", "files")
 
-  validates :position,    presence: true, uniqueness: {scope: :build_id}
-  validates :rule_set_id, presence: true
+  validates :position, :rule_set_id, presence: true
 
   def prev
     my_pos = position

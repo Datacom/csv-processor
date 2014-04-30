@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(version: 20140416232912) do
     t.datetime "updated_at"
   end
 
-  add_index "build_files", ["build_id", "position"], name: "index_build_files_on_build_id_and_position", unique: true
   add_index "build_files", ["build_id"], name: "index_build_files_on_build_id"
   add_index "build_files", ["rule_set_id"], name: "index_build_files_on_rule_set_id"
 

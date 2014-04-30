@@ -10,7 +10,5 @@ class CreateBuildFiles < ActiveRecord::Migration
 
       t.timestamps
     end
-
-    add_index :build_files, [:build_id, :position], unique: true
   end
 end

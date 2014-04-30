@@ -54,4 +54,16 @@ module ApplicationHelper
 
     content_tag(:i, '', options)
   end
+
+  def flash_div(key)
+    bs_class = {notice: 'success', alert: 'danger'}.tap { |h| h.default = 'info' }[key]
+    if flash[key].present?
+      content_tag :div, class: "alert alert-dismissable alert-#{bs_class}" do
+        [
+          content_tag(:button, icon(:times), type: 'button', class: 'close', data: {dismiss: 'alert'}, aria_hidden: true),
+          h(flash[key])
+        ].join.html_safe
+      end
+    end
+  end
 end
