@@ -1,7 +1,7 @@
 class Build < ActiveRecord::Base
   has_many :build_files, -> { order :position }
 
-  accepts_nested_attributes_for :build_files
+  accepts_nested_attributes_for :build_files, allow_destroy: true
 
   validate :file_positions_unique
 

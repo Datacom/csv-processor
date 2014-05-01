@@ -1,6 +1,6 @@
 function disableEndMoveButtons() {
-  var upArrows = $('.cp-build-file-field-row .cp-move-up'),
-      downArrows = $('.cp-build-file-field-row .cp-move-down');
+  var upArrows   = $('.cp-build-file-field-row .cp-move-up:visible'),
+      downArrows = $('.cp-build-file-field-row .cp-move-down:visible');
 
   upArrows.removeClass('disabled').find('i').removeClass('fa-ban').addClass('fa-arrow-up');
   upArrows.first().addClass('disabled').find('i').removeClass('fa-arrow-up').addClass('fa-ban');
@@ -10,19 +10,44 @@ function disableEndMoveButtons() {
 }
 
 function loadPreview() {
-  var params = {};
-  $('form').find('input').each(function() {
-    var name = $(this).prop('name');
-    if (name.match(/^build\[/)) params[name] = $(this).val();
+  // Load parameters from form
+  var params = {},
+      readers = [];
+
+  $('form').find("input[name^='build[']").each(function() {
+    var name = $(this).prop('name'),
+        buildFileDestroyed = name.match(/\[build_files_attributes\]/) &&
+          eval($("input[name='" + name.replace(/\[\w*\]$/, '[_destroy]') + "']").val());
+
+    if (!buildFileDestroyed) {
+      // We need to read the file before passing it back to the server
+      if (name.match(/\[file\]$/)) {
+        var file   = $(this)[0].files[0],
+            reader = new FileReader;
+        readers.push(reader);
+  
+        params[name.replace('[file]', '[filename]')] = file.name;
+  
+        // FileReader is asynchronous. This is what to do when it finishes
+        reader.onload = function(e) { 
+          params[name.replace('[file]', '[raw]')] = reader.result;
+        };
+  
+        reader.readAsText(file); 
+      } else
+        // Other params can be passed back quite simply
+        params[name] = $(this).val();
+    }
   });
-  $.get($('#cp-preview-build').data('url'), params).done(function(data) {
-    $('#cp-build-preview').html(data);
-  })
+
+  $('#cp-build-preview').load($('#cp-preview-build').data('url'), params);
 }
 
 $(function() {
   $('#cp-preview-build').on('click', function() {
+    $(this).find('i').addClass('fa-spinner fa-spin').removeClass('fa-search');
     loadPreview();
+    $(this).find('i').removeClass('fa-spinner fa-spin').addClass('fa-search');
     event.preventDefault();
   });
 

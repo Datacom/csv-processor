@@ -12,31 +12,38 @@ class BuildFile < ActiveRecord::Base
 
   def prev
     my_pos = position
-    self.class.where { position < my_pos }.to_a.max_by &:position
+    self.class.where { position < my_pos }.order(position: :desc).limit(1).first
   end
 
   def foll
     my_pos = position
-    self.class.where { position > my_pos }.to_a.min_by &:position
+    self.class.where { position > my_pos }.order(:position).limit(1).first
   end
-
 
   def file=(upload)
     case upload
     when ActionDispatch::Http::UploadedFile
-      self.path = File.join(REPO, upload.original_filename)
-      @raw      = upload.read.encode
+      self.filename = upload.original_filename
+      @raw          = upload.read.encode
     when File
-      self.path = File.join(REPO, File.split(upload.path)[1])
-      @raw      = upload.read.encode
+      self.filename = File.split(upload.path)[1]
+      @raw          = upload.read.encode
     when String
-      self.path = File.join(REPO, File.split(upload)[1])
-      @raw      = File.read(upload).encode
+      self.filename = File.split(upload)[1]
+      @raw          = File.read(upload).encode
     end
   end
 
   def filename
     File.split(path)[1]
+  end
+
+  def filename=(filename)
+    self.path = File.join(REPO, filename)
+  end
+
+  def raw=(content)
+    @raw = content
   end
 
   def table

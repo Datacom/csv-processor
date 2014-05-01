@@ -2,6 +2,8 @@
 <div class="row">&nbsp;</div>
 
 <%= form_for @build do |f| %>
+  <%= f.hidden_field :id %>
+
   <div class="row form-group">
     <div class="col-xs-12">
       <%= f.text_field :name, class: 'form-control', placeholder: 'Enter build name' %>
@@ -32,7 +34,8 @@
     <%= link_to_add_association "#{icon :upload} Add file".html_safe, f, :build_files, class: 'btn btn-default' %>
 
     <div class="btn-group pull-right form-group">
-      <%= link_to "#{icon :search} Preview".html_safe, '#', data: {url: build_preview_path(@build)}, class: 'btn btn-default', id: 'cp-preview-build' %>
+      <%= link_to "#{icon :search} Preview".html_safe, '#', class: 'btn btn-default', id: 'cp-preview-build',
+            data: {url: preview_builds_path, method: :post, remote: true} %>
       <%= f.submit "Save", class: 'btn btn-primary' %>
     </div>
   </div>
