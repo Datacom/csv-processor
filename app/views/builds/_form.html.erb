@@ -9,7 +9,7 @@
       <%= f.text_field :name, class: 'form-control', placeholder: 'Enter build name' %>
     </div>
   </div>
-  <div class="row" id="field-headers"<%= ' style=display:none;' unless @build.build_files.any? %>>
+  <div class="row" id="field-headers"<%= ' style=display:none;' unless @build.input_files.any? %>>
     <div class="col-fluid">
       <div class="row">
         <div class="col-xs-6">
@@ -22,17 +22,18 @@
     </div>
   </div>
 
-  <%= f.fields_for :build_files do |bf| %>
-    <%= render 'build_file_fields', f: bf %>
+  <%= f.fields_for :input_files do |bf| %>
+    <%= render 'input_file_fields', f: bf %>
   <% end %>
 
-  <div id="cp-add-build-file">
-    <%= link_to_add_association "#{icon :upload} Add file".html_safe, f, :build_files, class: 'btn btn-default' %>
+  <div id="cp-add-input-file">
+    <%= link_to_add_association "#{icon :upload} Add file".html_safe, f, :input_files, class: 'btn btn-default' %>
 
     <div class="btn-group pull-right form-group">
       <%= link_to "#{icon :search} Preview".html_safe, '#', class: 'btn btn-default', id: 'cp-preview-build',
             data: {url: preview_builds_path} %>
       <%= f.submit "Save", class: 'btn btn-primary' %>
+      <%= link_to "#{icon :download} Download".html_safe, build_download_path(@build), class: 'btn btn-default' %>
     </div>
   </div>
 <% end %>

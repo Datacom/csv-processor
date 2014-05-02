@@ -8,7 +8,12 @@ class BuildFile < ActiveRecord::Base
 
   REPO = File.join("tmp", "files")
 
-  validates :position, :rule_set_id, presence: true
+  validates :position, :rule_set_id, presence: {if: :input?}
+  validates :path, presence: true
+
+  def input?
+    !output?
+  end
 
   def file=(upload)
     case upload
@@ -40,6 +45,11 @@ class BuildFile < ActiveRecord::Base
     @table ||= CSV::Table.new(parsed_csv[1..-1].map { |r| CSV::Row.new(parsed_csv[0], r) })
   end
 
+  def table=(csv_table)
+    @table = csv_table.clone
+    @raw   = @table.to_s
+  end
+
   delegate :headers, to: :table
 
   def remove_blanks!
@@ -59,6 +69,17 @@ class BuildFile < ActiveRecord::Base
     self
   end
 
+  def save_raw_file
+    if input?
+      translate!
+      remove_blanks!
+    end
+
+    Dir.mkpath REPO
+    self.size = File.write(path, raw)
+    self.md5 = Digest::MD5.file(path).hexdigest
+  end
+
   private
 
   # Only load the contents when required. Set @raw to nil to reload.
@@ -72,15 +93,6 @@ class BuildFile < ActiveRecord::Base
 
   def raw_changed?
     Digest::MD5.hexdigest(raw) != md5
-  end
-
-  def save_raw_file
-    translate!
-    remove_blanks!
-
-    Dir.mkpath REPO
-    self.size = File.write(path, raw)
-    self.md5 = Digest::MD5.file(path).hexdigest
   end
 end
 

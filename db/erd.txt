@@ -2,9 +2,10 @@
                                    ║ build_files                  ╟─
 ╔══════════════════════════════╗   ╟────────────────┬─────────┬───╢
 ║ builds                       ╟───╢ build_id       │ FK      │   ║
-╟────────────────┬─────────┬───╢   ║ position       │ integer │ R ║
+╟────────────────┬─────────┬───╢   ║ position       │ integer │   ║
 ║ name           │ string  │   ║ ┌─╢ rule_set_id    │ FK      │ R ║
-╚════════════════╧═════════╧═══╝ │ ║ path           │ string  │   ║
+╚════════════════╧═════════╧═══╝ │ ║ output         │ boolean │ D ║
+                                 │ ║ path           │ string  │   ║
                                  │ ║ size           │ integer │   ║
                                  │ ║ md5            │ string  │   ║
                                  │ ╚════════════════╧═════════╧═══╝

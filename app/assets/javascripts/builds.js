@@ -1,6 +1,6 @@
 function runAfterFilesChange() {
-  var upArrows   = $('.cp-build-file-field-row .cp-move-up:visible'),
-      downArrows = $('.cp-build-file-field-row .cp-move-down:visible');
+  var upArrows   = $('.cp-input-file-field-row .cp-move-up:visible'),
+      downArrows = $('.cp-input-file-field-row .cp-move-down:visible');
 
   // Enable all up arrows, disable the first one
   upArrows.removeClass('disabled').find('i').removeClass('fa-ban').addClass('fa-arrow-up');
@@ -11,7 +11,7 @@ function runAfterFilesChange() {
   downArrows.last().addClass('disabled').find('i').removeClass('fa-arrow-down').addClass('fa-ban');
 
   // Show the field headers iff there are any rows
-  $('#field-headers').toggle(!!$('.cp-build-file-field-row:visible').length);
+  $('#field-headers').toggle(!!$('.cp-input-file-field-row:visible').length);
 }
 
 function loadPreview() {
@@ -63,8 +63,8 @@ $(function() {
 
   // Event is fired by clicks on .cp-move-up, but is attached to the document so new .cp-move-ups also respond
   $(document).on('click', '.cp-move-up', function() {
-    var thisRow      = $(this).closest('.cp-build-file-field-row'),
-        prevRow      = thisRow.prevAll('.cp-build-file-field-row').first(),
+    var thisRow      = $(this).closest('.cp-input-file-field-row'),
+        prevRow      = thisRow.prevAll('.cp-input-file-field-row').first(),
         thisPosField = thisRow.find('[name*="[position]"]'),
         prevPosField = prevRow.find('[name*="[position]"]'),
         thisPos      = thisPosField.val(),
@@ -77,8 +77,8 @@ $(function() {
   });
 
   $(document).on('click', '.cp-move-down', function() {
-    var thisRow      = $(this).closest('.cp-build-file-field-row'),
-        nextRow      = thisRow.nextAll('.cp-build-file-field-row').first(),
+    var thisRow      = $(this).closest('.cp-input-file-field-row'),
+        nextRow      = thisRow.nextAll('.cp-input-file-field-row').first(),
         thisPosField = thisRow.find('[name*="[position]"]'),
         nextPosField = nextRow.find('[name*="[position]"]'),
         thisPos      = thisPosField.val(),
@@ -90,13 +90,13 @@ $(function() {
     event.preventDefault();
   });
 
-  $(document).on('cocoon:after-insert', '#cp-add-build-file', function() {
+  $(document).on('cocoon:after-insert', '#cp-add-input-file', function() {
     var newPos = 0
     $("[name*='[position]']").each(function() {
       var thisPos = Number($(this).val());
       if (thisPos > newPos) newPos = thisPos;
     });
-    $(this).prevAll('.cp-build-file-field-row').first().find("[name*='[position]']").val(newPos + 1);
+    $(this).prevAll('.cp-input-file-field-row').first().find("[name*='[position]']").val(newPos + 1);
     runAfterFilesChange();
   });
 

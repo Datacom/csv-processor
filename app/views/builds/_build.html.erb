@@ -3,7 +3,7 @@
   <td><%= build.updated_at.getlocal %></td>
   <td><%= build.table.count %></td>
   <td><%= build.table.headers.count %></td>
-  <td><%= build.build_files.count %></td>
+  <td><%= build.input_files.count %></td>
   <td>
     <div class="btn-group">
       <%= link_to icon(:search), '#', class: 'btn btn-default cp-expand-build', title: 'Expand', data: {build_id: build.id} %>

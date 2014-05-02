@@ -32,6 +32,13 @@ class BuildsController < ApplicationController
     render partial: 'preview', locals: {build: tmp_build}
   end
 
+  def download
+    @build.update_output_file
+    file = @build.output_file
+    file.save_raw_file
+    send_file file.path
+  end
+
   def update
     if @build.update(build_params)
       redirect_to @build, notice: 'Build was successfully updated.'
@@ -53,10 +60,10 @@ class BuildsController < ApplicationController
   end
 
   def build_params
-    params.require(:build).permit(:name, build_files_attributes: [:id, :file, :rule_set_id, :position, :_destroy])
+    params.require(:build).permit(:name, input_files_attributes: [:id, :file, :rule_set_id, :position, :_destroy])
   end
 
   def preview_params
-    params.require(:build).permit(:id, build_files_attributes: [:id, :rule_set_id, :position, :_destroy, :filename, :raw])
+    params.require(:build).permit(:id, input_files_attributes: [:id, :rule_set_id, :position, :_destroy, :filename, :raw])
   end
 end

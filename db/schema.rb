@@ -15,8 +15,9 @@ ActiveRecord::Schema.define(version: 20140416232912) do
 
   create_table "build_files", force: true do |t|
     t.integer  "build_id"
-    t.integer  "position",    null: false
-    t.integer  "rule_set_id", null: false
+    t.integer  "position"
+    t.integer  "rule_set_id"
+    t.boolean  "output",      default: false
     t.string   "path"
     t.integer  "size"
     t.string   "md5"
