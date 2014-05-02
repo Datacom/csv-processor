@@ -10,16 +10,6 @@ class BuildFile < ActiveRecord::Base
 
   validates :position, :rule_set_id, presence: true
 
-  def prev
-    my_pos = position
-    self.class.where { position < my_pos }.order(position: :desc).limit(1).first
-  end
-
-  def foll
-    my_pos = position
-    self.class.where { position > my_pos }.order(:position).limit(1).first
-  end
-
   def file=(upload)
     case upload
     when ActionDispatch::Http::UploadedFile

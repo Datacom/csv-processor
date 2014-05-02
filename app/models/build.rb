@@ -9,7 +9,7 @@ class Build < ActiveRecord::Base
     # Memoized
     return @table if @table
 
-    files = build_files.sort_by &:position # positions may not be up to date in the database
+    files = build_files.reject(&:marked_for_destruction?).sort_by(&:position) # changes won't have been saved in preview
 
     # Grab all the headers
     headers = files.map(&:headers).flatten.uniq

@@ -9,21 +9,17 @@
       <%= f.text_field :name, class: 'form-control', placeholder: 'Enter build name' %>
     </div>
   </div>
-  <div class="row">
-    <% if @build.build_files.any? %>
-      <div class="col-fluid">
-        <div class="row">
-          <div class="col-xs-6">
-            <span class="label label-default">File</span>
-          </div>
-          <div class="col-xs-6">
-            <span class="label label-default">Rule Set</span>
-          </div>
+  <div class="row" id="field-headers"<%= ' style=display:none;' unless @build.build_files.any? %>>
+    <div class="col-fluid">
+      <div class="row">
+        <div class="col-xs-6">
+          <span class="label label-default">File</span>
+        </div>
+        <div class="col-xs-6">
+          <span class="label label-default">Rule Set</span>
         </div>
       </div>
-    <% else %>
-      &nbsp;
-    <% end %>
+    </div>
   </div>
 
   <%= f.fields_for :build_files do |bf| %>
@@ -35,7 +31,7 @@
 
     <div class="btn-group pull-right form-group">
       <%= link_to "#{icon :search} Preview".html_safe, '#', class: 'btn btn-default', id: 'cp-preview-build',
-            data: {url: preview_builds_path, method: :post, remote: true} %>
+            data: {url: preview_builds_path} %>
       <%= f.submit "Save", class: 'btn btn-primary' %>
     </div>
   </div>
