@@ -12,7 +12,7 @@ class Build < ActiveRecord::Base
     # Memoized
     return @table if @table
 
-    files = input_files.reject(&:marked_for_destruction?).sort_by(&:position) # changes won't have been saved in preview
+    files = input_files
 
     # Grab all the headers
     headers = files.map(&:headers).flatten.uniq

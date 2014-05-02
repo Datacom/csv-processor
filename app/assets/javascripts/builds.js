@@ -14,48 +14,8 @@ function runAfterFilesChange() {
   $('#field-headers').toggle(!!$('.cp-input-file-field-row:visible').length);
 }
 
-function loadPreview() {
-  // Load parameters from form
-  var params = {},
-      readers = [];
-
-  $('form').find("input[name^='build[']").each(function() {
-    var name = $(this).prop('name');
-
-    if (name.match(/\[file\]$/)) {
-      // This is a new file. We need to pass its contents back to the server
-      var file   = $(this)[0].files[0],
-          reader = new FileReader;
-      readers.push(reader);
-
-      params[name.replace('[file]', '[filename]')] = file.name;
-
-      // FileReader is asynchronous. This is what to do when it finishes
-      reader.onload = function(e) { 
-        params[name.replace('[file]', '[raw]')] = reader.result;
-        console.log(reader.result);
-      };
-
-      reader.readAsText(file); 
-    } else
-      // Other params can be passed back quite simply
-      params[name] = $(this).val();
-  });
-
-  $('#cp-build-preview').load($('#cp-preview-build').data('url'), params);
-}
-
 // Attach events
 $(function() {
-  // Events are fired by clicks on specific elements, but because we're using turbolinks, they have to be attached to the
-  // document.
-  $(document).on('click', '#cp-preview-build', function() {
-    $(this).find('i').addClass('fa-spinner fa-spin').removeClass('fa-search');
-    loadPreview();
-    $(this).find('i').removeClass('fa-spinner fa-spin').addClass('fa-search');
-    event.preventDefault();
-  });
-
   $(document).on('click', '.cp-expand-build', function() {
     $('#cp-build-' + $(this).data('build-id') + '-preview').fadeToggle();
     event.preventDefault();

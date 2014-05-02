@@ -30,10 +30,8 @@
     <%= link_to_add_association "#{icon :upload} Add file".html_safe, f, :input_files, class: 'btn btn-default' %>
 
     <div class="btn-group pull-right form-group">
-      <%= link_to "#{icon :search} Preview".html_safe, '#', class: 'btn btn-default', id: 'cp-preview-build',
-            data: {url: preview_builds_path} %>
       <%= f.submit "Save", class: 'btn btn-primary' %>
-      <%= link_to "#{icon :download} Download".html_safe, build_download_path(@build), class: 'btn btn-default' %>
+      <%= link_to("#{icon :download} Download".html_safe, build_download_path(@build), class: 'btn btn-default') if @build.id %>
     </div>
   </div>
 <% end %>

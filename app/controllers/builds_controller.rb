@@ -1,5 +1,5 @@
 class BuildsController < ApplicationController
-  before_filter :find_build, except: [:index, :new, :create, :preview]
+  before_filter :find_build, except: [:index, :new, :create]
 
   def index
     @builds = Build.all
@@ -21,15 +21,6 @@ class BuildsController < ApplicationController
   end
 
   def show
-  end
-
-  def preview # AJAX method
-    if (id = preview_params[:id]).present?
-      tmp_build = Build.find(id).tap { |b| b.attributes = preview_params }
-    else
-      tmp_build = Build.new(preview_params)
-    end
-    render partial: 'preview', locals: {build: tmp_build}
   end
 
   def download
@@ -61,9 +52,5 @@ class BuildsController < ApplicationController
 
   def build_params
     params.require(:build).permit(:name, input_files_attributes: [:id, :file, :rule_set_id, :position, :_destroy])
-  end
-
-  def preview_params
-    params.require(:build).permit(:id, input_files_attributes: [:id, :rule_set_id, :position, :_destroy, :filename, :raw])
   end
 end
