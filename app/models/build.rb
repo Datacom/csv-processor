@@ -1,8 +1,10 @@
 class Build < ActiveRecord::Base
-  has_many :input_files, -> { where(output: false).order(:position) }, class_name: 'BuildFile'
-  has_one  :output_file, -> { where output: true },                    class_name: 'BuildFile'
+  OUTPUT = 'BUILD_OUTPUT'
 
-  accepts_nested_attributes_for :input_files, allow_destroy: true
+  has_many :build_files, -> { order(:position) }
+  belongs_to :output_file, class_name: 'BasicFile'
+
+  accepts_nested_attributes_for :build_files, allow_destroy: true
 
   validate :file_positions_present_and_unique
 
@@ -12,7 +14,7 @@ class Build < ActiveRecord::Base
     # Memoized
     return @table if @table
 
-    files = input_files
+    files = build_files
 
     # Grab all the headers
     headers = files.map(&:headers).flatten.uniq
@@ -33,9 +35,10 @@ class Build < ActiveRecord::Base
   end
 
   def update_output_file
-    file = output_file || build_output_file
-    file.table = table
-    file.filename = [
+    self.output_file   ||= build_output_file
+    output_file.role     = OUTPUT
+    output_file.content  = table.to_s
+    output_file.filename = [
       id,
       name.downcase.split(/\W/).compact.join('_'),
       Time.now.iso8601.split(/\D/).compact.join('_')
@@ -45,7 +48,7 @@ class Build < ActiveRecord::Base
   private
 
   def file_positions_present_and_unique
-    poses = input_files.map &:position
+    poses = build_files.map &:position
     errors.add(:base, "Input file positions are required") unless poses.all?
     errors.add(:base, "Input file positions must be unique") if poses != poses.uniq
   end

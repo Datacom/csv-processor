@@ -42,7 +42,7 @@ print "BuildFiles: #{BuildFile.count} before, "
   ['AXXXX_XXXX_XXXX_????-???????', wpc_crd, 2],
   ['TransHist',                    bnz,     3],
 ].each do |file, rule_set, pos|
-  build.input_files.create do |bf|
+  build.build_files.create do |bf|
     bf.file     = Dir.glob("#{ENV['HOME']}/Downloads/#{file}.csv").first or next
     bf.rule_set = rule_set
     bf.position = pos

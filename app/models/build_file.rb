@@ -1,98 +1,50 @@
 require 'csv'
 
 class BuildFile < ActiveRecord::Base
+  INPUT  = 'BUILD_FILE_INPUT'
+  OUTPUT = 'BUILD_FILE_OUTPUT'
+
   belongs_to :build
   belongs_to :rule_set
+  belongs_to :input_file,  class_name: 'BasicFile'
+  belongs_to :output_file, class_name: 'BasicFile'
 
-  before_save :save_raw_file
+  after_initialize :ensure_basic_files
 
-  REPO = File.join("tmp", "files")
+  validates :position, :rule_set_id, presence: true
 
-  validates :position, :rule_set_id, presence: {if: :input?}
-  validates :path, presence: true
-
-  def input?
-    !output?
-  end
-
-  def file=(upload)
-    case upload
-    when ActionDispatch::Http::UploadedFile
-      self.filename = upload.original_filename
-      @raw          = upload.read.encode
-    when File
-      self.filename = File.split(upload.path)[1]
-      @raw          = upload.read.encode
-    when String
-      self.filename = File.split(upload)[1]
-      @raw          = File.read(upload).encode
-    end
-  end
-
-  def filename
-    File.split(path)[1]
-  end
-
-  def filename=(filename)
-    self.path = File.join(REPO, filename)
-  end
-
-  def raw=(content)
-    @raw = content
-  end
+  delegate :file=, to: :input_file
 
   def table
     @table ||= CSV::Table.new(parsed_csv[1..-1].map { |r| CSV::Row.new(parsed_csv[0], r) })
   end
 
-  def table=(csv_table)
-    @table = csv_table.clone
-    @raw   = @table.to_s
-  end
-
   delegate :headers, to: :table
 
-  def remove_blanks!
-    orig   = table.mode
-    @table = table.by_col.delete_if { |c| c.flatten.all?(&:nil?) }
-    @table = table.by_row.delete_if &:empty?
-    @table = table.send("by_#{orig}")
-    @raw   = @table.to_s
-    self
-  end
-
-  def translate!
-    @table = CSV::Table.new(parsed_csv[1..-1].map do |r|
+  def translate
+    # translate headers
+    row_a = parsed_csv[1..-1].map do |r|
       CSV::Row.new(headers.map { |h| rule_set.to_hash[h] }, r)
-    end)
-    @raw = @table.to_s
-    self
-  end
-
-  def save_raw_file
-    if input?
-      translate!
-      remove_blanks!
     end
 
-    Dir.mkpath REPO
-    self.size = File.write(path, raw)
-    self.md5 = Digest::MD5.file(path).hexdigest
+    # remove blanks
+    tmp = CSV::Table.new(row_a).by_col.delete_if { |c| c.flatten.all?(&:nil?) }.by_row.delete_if(&:empty?).send("by_#{orig}")
+    
+    # pass result to output file
+    output_file.content = tmp.to_s
   end
 
   private
 
-  # Only load the contents when required. Set @raw to nil to reload.
-  def raw
-    @raw ||= File.read(path)
-  end
-
   def parsed_csv
-    @parsed_csv ||= (raw ? CSV.parse(raw) : [[]])
+    @parsed_csv ||= (input_file.content ? CSV.parse(input_file.content) : [[]])
   end
 
-  def raw_changed?
-    Digest::MD5.hexdigest(raw) != md5
+  def ensure_basic_files
+    input_file     ||= build_input_file
+    input_file.role  = INPUT
+    output_file    ||= build_output_file
+    output_file.role = OUTPUT
   end
 end
 

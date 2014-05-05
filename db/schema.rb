@@ -11,28 +11,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140416232912) do
+ActiveRecord::Schema.define(version: 20140504220757) do
+
+  create_table "basic_files", force: true do |t|
+    t.string   "path",       null: false
+    t.integer  "size"
+    t.string   "md5"
+    t.string   "role"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "basic_files", ["path"], name: "index_basic_files_on_path", unique: true
 
   create_table "build_files", force: true do |t|
     t.integer  "build_id"
     t.integer  "position"
     t.integer  "rule_set_id"
-    t.boolean  "output",      default: false
-    t.string   "path"
-    t.integer  "size"
-    t.string   "md5"
+    t.integer  "input_file_id"
+    t.integer  "output_file_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "build_files", ["build_id"], name: "index_build_files_on_build_id"
+  add_index "build_files", ["input_file_id"], name: "index_build_files_on_input_file_id"
+  add_index "build_files", ["output_file_id"], name: "index_build_files_on_output_file_id"
   add_index "build_files", ["rule_set_id"], name: "index_build_files_on_rule_set_id"
 
   create_table "builds", force: true do |t|
     t.string   "name"
+    t.integer  "output_file_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "builds", ["output_file_id"], name: "index_builds_on_output_file_id"
 
   create_table "field_mappings", force: true do |t|
     t.integer  "rule_set_id"
